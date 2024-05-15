@@ -70,11 +70,7 @@ namespace KursovaBack.Controllers
         public IActionResult AddProjectMentor([FromBody] AddProjectUser model)
         {
             model.role = Models.Enums.ProjectRole.Mentor;
-
-
             _projectRepository.AddUserToProject(model);
-
-
             return Ok();
         }
 

@@ -5,7 +5,7 @@ namespace KursovaBack.ViewModels
     public class ProjectCreateViewModel
     {
       
-        public Category Category { get; set; }
+        public string Category { get; set; }
         public Guid CreatorId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

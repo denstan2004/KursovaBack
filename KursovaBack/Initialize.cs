@@ -11,7 +11,11 @@ namespace KursovaBack
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
-        
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+
+
         }
         public static void InitializeServices(this IServiceCollection services)
         {

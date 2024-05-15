@@ -17,6 +17,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
 
          async System.Threading.Tasks.Task IBaseRepository<Project>.Create(Project entity)
         {
+            entity.Id= Guid.NewGuid();
             using (IDbConnection db = new NpgsqlConnection(connectionString)) 
             {
                 try
@@ -111,9 +112,9 @@ namespace KursovaBack.DatabaseAccess.Repositories
                 try
                 {
                     
-                    string sqlQuery = "select username, password, firstname, lastname, skills, education, expirience, investment_info, id, role, project_role from users join project_user on  users.id = project_user.user_id where project_user.project_id=@projectId;";
+                   string sqlQuery = "select username, password, firstname, lastname, skills, education, expirience, investment_info, id, role, project_role from users join project_user on  users.id = project_user.user_id where project_user.project_id=@projectId;";
                    var projects= await  db.QueryAsync<ProjectMemberModel>(sqlQuery, new { projectId }) ;
-                    return projects.ToList();
+                   return projects.ToList();
                 }
                 catch (Exception ex)
                 {

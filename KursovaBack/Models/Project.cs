@@ -5,7 +5,7 @@ namespace KursovaBack.Models
     public class Project
     {
         public Guid Id { get; set; }
-        public Category Category { get; set; }
+        public string Category { get; set; }
         public Guid CreatorId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -13,7 +13,7 @@ namespace KursovaBack.Models
         public int InvestmentAmount { get; set; }
         public int InvestmentMoney    { get; set; }
 
-        public Project(Guid id, Category category, Guid creatorId, string name, string description, string analog, int investmentAmount, int investmentMoney)
+        public Project(Guid id, string category, Guid creatorId, string name, string description, string analog, int investmentAmount, int investmentMoney)
         {
             Id = id;
             Category = category;

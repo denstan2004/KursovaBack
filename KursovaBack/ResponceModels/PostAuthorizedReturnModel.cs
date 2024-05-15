@@ -1,6 +1,6 @@
-﻿namespace KursovaBack.Models
+﻿namespace KursovaBack.ResponceModels
 {
-    public class Post
+    public class PostAuthorizedReturnModel
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -10,8 +10,9 @@
         public int Likes { get; set; }
         public byte[] Image { get; set; }
         public DateTime Date { get; set; }
+        public bool IsLiked { get; set; }
 
-        public Post(Guid id, string title, string text, Guid projectId, Guid authorId, int likes, byte[] image, DateTime date)
+        public PostAuthorizedReturnModel(Guid id, string title, string text, Guid projectId, Guid authorId, int likes, byte[] image, DateTime date, bool isLiked)
         {
             Id = id;
             Title = title;
@@ -21,9 +22,10 @@
             Likes = likes;
             Image = image;
             Date = date;
+            IsLiked = isLiked;
         }
 
-        public Post()
+        public PostAuthorizedReturnModel()
         {
         }
     }
