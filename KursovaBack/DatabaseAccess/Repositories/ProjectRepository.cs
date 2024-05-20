@@ -4,7 +4,6 @@ using KursovaBack.Models;
 using KursovaBack.Models.Enums;
 using KursovaBack.ResponceModels;
 using KursovaBack.ViewModels;
-using Microsoft.Data.SqlClient;
 using Npgsql;
 using System.Data;
 using System.Reflection;
@@ -18,6 +17,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
          async System.Threading.Tasks.Task IBaseRepository<Project>.Create(Project entity)
         {
             entity.Id= Guid.NewGuid();
+            entity.InvestmentAmount = 0;
             using (IDbConnection db = new NpgsqlConnection(connectionString)) 
             {
                 try
@@ -26,6 +26,8 @@ namespace KursovaBack.DatabaseAccess.Repositories
                     var sqlQuery = "insert into projects (id, category,creator_id,name,description,analog,investment_amount,investment_money) VALUES(@Id, @Category,@CreatorId,@Name,@Description,@Analog,@InvestmentAmount,@InvestmentMoney)";
 
                     db.Execute(sqlQuery, entity);
+                    sqlQuery = " insert into project_user (user_id, project_role, project_id) values  (@CreatorId, 1, @Id)";
+                    db.Execute(sqlQuery,entity);
                 }
                 catch (Exception ex)
                 {
@@ -56,7 +58,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
             using (IDbConnection db = new NpgsqlConnection(connectionString))
             {
                
-                    return db.Query<Project>("Select * FROM Projects Where id=@id ", new { id }).ToList().FirstOrDefault();
+                    return db.Query<Project>("Select  name,investment_money as InvestmentMoney,description,analog,investment_amount as InvestmentAmount,creator_id as creatorid, id , category FROM Projects Where id=@id ", new { id }).ToList().FirstOrDefault();
                 
             }
         }
@@ -65,7 +67,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
         {
             using (IDbConnection db = new NpgsqlConnection(connectionString))
             {
-                var projects = await db.QueryAsync<Project>("SELECT * FROM Projects");
+                var projects = await db.QueryAsync<Project>("SELECT name,investment_money as InvestmentMoney,description,analog,investment_amount as InvestmentAmount,creator_id as creatorid, id , category FROM Projects");
                 return projects.ToList();
                 
             }
@@ -129,7 +131,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
             using (IDbConnection db = new NpgsqlConnection(connectionString))
             {
 
-                var projects = await db.QueryAsync<Project>("SELECT * FROM Projects WHERE category=@category", new {category});
+                var projects = await db.QueryAsync<Project>("SELECT  name,investment_money as InvestmentMoney,description,analog,investment_amount as InvestmentAmount,creator_id as creatorid, id , category FROM Projects WHERE category=@category", new {category});
                 return projects.ToList();
 
             }
@@ -140,9 +142,20 @@ namespace KursovaBack.DatabaseAccess.Repositories
             using (IDbConnection db = new NpgsqlConnection(connectionString))
             {
 
-                var projects =  db.Query<string>("SELECT category FROM Projects ").ToList();
+                var projects =  db.Query<string>("SELECT distinct category FROM Projects ").ToList();
                 return projects;
 
+            }
+        }
+
+        public List<Project> GetUserProjects(Guid userId)
+        {
+            using (IDbConnection db = new NpgsqlConnection(connectionString))
+            {
+
+                var projects = db.Query<Project>(" SELECT p.name, p.investment_money AS InvestmentMoney, p.description, p.analog, p.investment_amount AS InvestmentAmount, p.creator_id AS creatorid, p.id, p.category FROM project_user pu JOIN projects p ON pu.project_id = p.id WHERE pu.user_id = @userId ", new { userId }).ToList();
+                return projects;
+         
             }
         }
     }

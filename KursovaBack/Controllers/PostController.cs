@@ -3,6 +3,7 @@ using KursovaBack.Models;
 using KursovaBack.ResponceModels;
 using KursovaBack.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace KursovaBack.Controllers
 {
@@ -23,16 +24,46 @@ namespace KursovaBack.Controllers
         }
         [Route("Like/post")]
         [HttpPost]
-        public void LikePost(Guid postId, Guid userId) 
+        public int LikePost([FromBody] LikePost likePost) 
         {
-            _postRepository.LikePost(postId,userId);
+            _postRepository.LikePost(likePost.postId,likePost.userId);
+            return _postRepository.GetPostLikes(likePost.postId);
         }
 
         [Route("Create")]
         [HttpPost]
-        public void CreatePost([FromBody] Post post)
+        public async Task<IActionResult> CreatePost([FromForm] Post postViewModel)
         {
+            if (postViewModel == null)
+            {
+                return BadRequest("Invalid post data");
+            }
+
+            byte[] imageData = null;
+            if (postViewModel.fromFile != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await postViewModel.fromFile.CopyToAsync(ms);
+                    imageData = ms.ToArray();
+                }
+            }
+
+            var post = new Post
+            {
+                Id = Guid.NewGuid(),
+                Title = postViewModel.Title,
+                Text = postViewModel.Text,
+                ProjectId = postViewModel.ProjectId,
+                AuthorId = postViewModel.AuthorId,
+                Likes = 0,
+                Image = imageData,
+                Date = DateTime.Now
+            };
+
             _postRepository.Create(post);
+
+            return Ok();
         }
         [Route("GetAll/{projectId}")]
         [HttpGet]
@@ -45,6 +76,20 @@ namespace KursovaBack.Controllers
         public async Task<List<PostFullModel>> GetAllPostsFull(Guid projectId) 
         {
             var posts = await _postRepository.GetAllPostFullInfo(projectId);
+            foreach (var post in posts)
+            {
+                try {
+                    if (post.post.Image != null)
+                    {
+                       var imageBase64 = post.post.Image != null ? Convert.ToBase64String(post.post.Image) : null;
+                        post.post.ImageBase64 = imageBase64;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
             return posts;
         }
 

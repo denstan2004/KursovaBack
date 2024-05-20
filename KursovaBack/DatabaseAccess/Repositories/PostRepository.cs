@@ -40,7 +40,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
                 
                 try
                 {
-                    var sqlQuery = "INSERT INTO posts (id, title,text,project_id,author_id,likes,date ) VALUES(@Id, @Title,@Text,@ProjectId,@AuthorId,@Likes,@Date)";
+                    var sqlQuery = "INSERT INTO posts (id, title,text,project_id,author_id,likes,date,image ) VALUES(@Id, @Title,@Text,@ProjectId,@AuthorId,@Likes,@Date,@image)";
                     db.Execute(sqlQuery, entity);
                     
                 }
@@ -154,8 +154,8 @@ namespace KursovaBack.DatabaseAccess.Repositories
 
 
                    Guid userIdPresent =db.Query<Guid>("SELECT user_id FROM likes_users where post_id =@postId and user_id=@userId  ", new { postId,userId }).ToList().FirstOrDefault();
-                    if(userIdPresent!= Guid.Empty) return true;
-                    else return false;
+                    if(userIdPresent== Guid.Empty) return false;
+                    else return  true;
                 }
                 catch (Exception ex)
                 {
@@ -205,7 +205,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
         public async Task<List<PostFullModel>>  GetAllPostFullInfo(Guid projectId)
         {
             PostRepository postRepository = new PostRepository();
-            List<Post> posts= await postRepository.GetAll();
+            List<Post> posts=  postRepository.GetAllPostsByProject(projectId);
             List<PostFullModel> postFullModels = new List<PostFullModel>();
             foreach (Post post in posts)
             {
@@ -213,6 +213,24 @@ namespace KursovaBack.DatabaseAccess.Repositories
                 postFullModels.Add(postFullModel);
             }
             return postFullModels;
+        }
+
+        public int GetPostLikes(Guid postId)
+        {
+            using (IDbConnection db = new NpgsqlConnection(connectionString))
+            {
+                try
+                {
+
+
+                     int likes = db.Query<int>("SELECT likes FROM posts where id=@postId", new { postId }).ToList().FirstOrDefault();
+                    return likes;
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
         }
     }
 }

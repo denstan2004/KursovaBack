@@ -18,6 +18,7 @@ namespace KursovaBack.Controllers
         public void Create([FromBody]Comment comment)
         {
             _commentRepository.Create(comment);
+
         }
         [HttpDelete]
         [Route("Delete/{commentId}/{userId}")]

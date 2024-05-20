@@ -1,5 +1,4 @@
-﻿using Azure;
-using KursovaBack.Services.Interfaces;
+﻿using KursovaBack.Services.Interfaces;
 using KursovaBack.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

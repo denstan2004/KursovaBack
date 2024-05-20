@@ -29,6 +29,13 @@ namespace KursovaBack.Controllers
               return projects;
            
         }
+        [Route("id/{id}")]
+        [HttpGet]
+        public Project GetUser(Guid id)
+        {
+            var user = _projectRepository.Get(id);
+            return user;
+        }
         [Route("GetAll/Categories")]
         [HttpGet]
         public List<string> GetCategories ()
@@ -38,9 +45,9 @@ namespace KursovaBack.Controllers
         }
         [Route("GetAll/{category}")]
         [HttpGet]
-        public Task<List<Project>> GetAllByCategory(string category)
-        {
-            var projects = _projectRepository.GetAllByCategory(category);
+        public async Task<List<Project>> GetAllByCategory(string category)
+            {
+            var projects = await _projectRepository.GetAllByCategory(category);
             return projects;
         }
 
@@ -82,10 +89,17 @@ namespace KursovaBack.Controllers
             return Ok();
         }
         [HttpGet]
-        [Route("GetAll/Members/{projectId}")]
-        public IActionResult GetAllUsersByProject(Guid projectId)
+        [Route("Get/User/projects/{userId}")]
+        public List<Project> GetUserProjects (Guid userId)
         {
-            var projects =_projectRepository.GetAllByProject(projectId);
+            var projects= _projectRepository.GetUserProjects(userId);
+            return projects;
+        }
+        [HttpGet]
+        [Route("GetAll/Members/{projectId}")]
+        public async Task<IActionResult> GetAllUsersByProject(Guid projectId)
+        {
+            var projects = await _projectRepository.GetAllByProject(projectId);
             return Ok(projects);
         }
 

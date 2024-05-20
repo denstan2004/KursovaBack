@@ -9,5 +9,6 @@ namespace KursovaBack.DatabaseAccess.Interfaces
         List<PostAuthorizedReturnModel> GetAllAsAuthorized (Guid projectId,Guid userId);
         void LikePost(Guid postId, Guid userId);
         Task<List<PostFullModel>> GetAllPostFullInfo(Guid projectId);
+        int GetPostLikes(Guid postId);
     }
 }

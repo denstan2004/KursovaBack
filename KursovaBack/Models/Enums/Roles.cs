@@ -1,4 +1,4 @@
-﻿namespace KursovaBack.Models.Enums
+﻿ namespace KursovaBack.Models.Enums
 {
     public enum Roles
     {

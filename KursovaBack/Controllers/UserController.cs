@@ -20,12 +20,18 @@ namespace KursovaBack.Controllers
             var users= _userRepository.GetAll();
             return users;
         }
-        [Route("Id")]
+        [Route("id/{id}")]
         [HttpGet]
         public User GetUser(Guid id)
         {
             var user =_userRepository.Get(id);
             return user;
+        }
+        [Route("Update/{userId}")]
+        [HttpPut]
+        public void Update([FromBody] User user)
+        {
+            _userRepository.Update(user);
         }
         [Route("Name")]
         [HttpGet]

@@ -11,5 +11,6 @@ namespace KursovaBack.DatabaseAccess.Interfaces
         Task<List<ProjectMemberModel>> GetAllByProject(Guid projectId);
         public Task<List<Project>> GetAllByCategory(string category);
         public List<string> GetAllCategories();
+        public List<Project> GetUserProjects(Guid userId);
     }
 }

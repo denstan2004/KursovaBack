@@ -1,12 +1,14 @@
 ﻿using Dapper;
 using KursovaBack.DatabaseAccess.Interfaces;
 using KursovaBack.Models;
+using Microsoft.AspNetCore.Components;
 using Npgsql;
 using System.Data;
 using static Dapper.SqlMapper;
 
 namespace KursovaBack.DatabaseAccess.Repositories
 {
+
     public class CommentRepository : ICommentRepository
     {
         string connectionString = "Server=localhost; Port=5432; Database=postgres; User Id=postgres; Password=123456";
