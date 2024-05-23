@@ -29,6 +29,7 @@ namespace KursovaBack.Services.Implementations
                 
 
                 Project pr = new Project(projectId,project.Category,project.CreatorId,project.Name,project.Description,project.Analog,project.InvestmentAmount, project.InvestmentMoney);
+                pr.Image = project.Image;
                 _projectRepository.Create(pr);
                     return true;
             }

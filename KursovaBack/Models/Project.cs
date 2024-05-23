@@ -12,6 +12,9 @@ namespace KursovaBack.Models
         public string Analog { get; set; }
         public int InvestmentAmount { get; set; }
         public int InvestmentMoney    { get; set; }
+        public IFormFile fromFile { get; set; }
+        public string ImageBase64 { get; set; }
+        public byte[] Image { get; set; }
 
         public Project(Guid id, string category, Guid creatorId, string name, string description, string analog, int investmentAmount, int investmentMoney)
         {

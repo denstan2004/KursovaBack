@@ -19,6 +19,7 @@ namespace KursovaBack.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 var response = await _accountService.Register(model);
                 if (response.StatusCode == Data.StatusCode.OK)
                 {

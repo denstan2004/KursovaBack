@@ -12,5 +12,9 @@ namespace KursovaBack.ViewModels
         public string Analog { get; set; }
         public int InvestmentAmount { get; set; }
         public int InvestmentMoney { get; set; }
+        public IFormFile fromFile { get; set; }
+        public string ImageBase64 { get; set; }
+        public byte[] Image { get; set; }
+
     }
 }

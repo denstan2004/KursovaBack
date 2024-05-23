@@ -2,6 +2,8 @@
 using KursovaBack.DatabaseAccess.Repositories;
 using KursovaBack.Services.Implementations;
 using KursovaBack.Services.Interfaces;
+using project_back.DatabaseAccess.Interfaces;
+using project_back.DatabaseAccess.Repositories;
 
 namespace KursovaBack
 {
@@ -14,6 +16,12 @@ namespace KursovaBack
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IInvestmentRequestRepository, InvestmentRequestRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
+
+
+
 
 
         }

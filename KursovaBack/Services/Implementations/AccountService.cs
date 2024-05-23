@@ -72,9 +72,10 @@ namespace KursovaBack.Services.Implementations
                 User user = _userRepository.GetByName(model.Username);
                 if (user == null)
                 {
-                   
-                        user = new User()
-                        {
+
+                    user = new User()
+                    {
+                           
                             username = model.Username,
                             password = model.Password,
                             id = Guid.NewGuid(),

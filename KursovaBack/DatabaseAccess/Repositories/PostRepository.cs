@@ -198,6 +198,15 @@ namespace KursovaBack.DatabaseAccess.Repositories
             Task<List<Comment>> comments = _commentRepository.GetAllByPost(postId);
             await comments;
             User user = _userRepository.Get(post.AuthorId);
+            try
+            {
+                if (user.Avatar != null)
+                {
+                    var imageBase64 = user.Avatar != null ? Convert.ToBase64String(user.Avatar) : null;
+                    user.ImageBase64 = imageBase64;
+                }
+            }
+            catch (Exception ex) { }
             PostFullModel model = new PostFullModel(comments, user, post);
             return model;
         }

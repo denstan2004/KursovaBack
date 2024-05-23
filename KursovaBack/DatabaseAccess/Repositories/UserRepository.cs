@@ -15,7 +15,7 @@ namespace KursovaBack.DatabaseAccess.Repositories
             {
                 try
                 {
-                    var sqlQuery = "INSERT INTO Users (id, username,password,role,firstname,lastname,skills,education,expirience,investment_info ) VALUES(@id, @username,@password,@role,@firstname,@lastname,@skills,@education,@expirience,@investment_info)";
+                    var sqlQuery = "INSERT INTO Users (id, username,password,role,firstname,lastname,skills,education,expirience,investment_info,avatar ) VALUES(@id, @username,@password,@role,@firstname,@lastname,@skills,@education,@expirience,@investment_info,@avatar)";
                     db.Execute(sqlQuery, user);
 
                 }
@@ -68,10 +68,38 @@ namespace KursovaBack.DatabaseAccess.Repositories
         {
             using (IDbConnection db = new NpgsqlConnection(connectionString))
             {
-                var users = await db.QueryAsync<User>("UPDATE public.usersSET username=?, password=?, role=?, firstname=?, lastname=?, skills=?, education=?, expirience=?, investment_info=?, id=?WHERE <condition>;",new{user});
-               
+                string sqlQuery = @"
+            UPDATE public.users 
+            SET 
+                username = @username, 
+                password = @password, 
+                firstname = @firstname, 
+                lastname = @lastname, 
+                skills = @skills, 
+                education = @education, 
+                expirience = @expirience, 
+                investment_info = @investment_info, 
+                avatar = @avatar 
+            WHERE id = @id;";
+
+                var parameters = new
+                {
+                    username = user.username,
+                    password = user.password,
+                    firstname = user.firstname,
+                    lastname = user.lastname,
+                    skills = user.skills,
+                    education = user.education,
+                    expirience = user.expirience,
+                    investment_info = user.investment_info,
+                    avatar = user.Avatar,
+                    id = user.id
+                };
+
+                await db.ExecuteAsync(sqlQuery, parameters);
             }
         }
+
 
         public User GetByName(string name)
         {

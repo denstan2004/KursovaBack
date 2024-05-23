@@ -15,6 +15,10 @@ namespace KursovaBack.ResponceModels
         public string expirience { get; set; }
         public string investment_info { get; set; }
         public ProjectRole project_role { get; set; }
+        public IFormFile fromFile { get; set; }
+        public string ImageBase64 { get; set; }
+        public byte[] Avatar { get; set; }
+
 
     }
 }

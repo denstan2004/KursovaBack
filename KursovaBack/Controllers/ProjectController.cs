@@ -1,4 +1,5 @@
 ﻿using KursovaBack.DatabaseAccess.Interfaces;
+using KursovaBack.DatabaseAccess.Repositories;
 using KursovaBack.Models;
 using KursovaBack.Services.Implementations;
 using KursovaBack.Services.Interfaces;
@@ -22,19 +23,31 @@ namespace KursovaBack.Controllers
         }
         [Route ("GetAll")]
         [HttpGet]
-        public Task<List<Project>> GetAllProjects() 
+        public async Task<List<Project>> GetAllProjects() 
         {
-           var projects = _projectRepository.GetAll();
+           var projects  = await _projectRepository.GetAll();
             
-              return projects;
+              return convert(projects);
            
         }
         [Route("id/{id}")]
         [HttpGet]
-        public Project GetUser(Guid id)
+        public Project GetProject(Guid id)
         {
-            var user = _projectRepository.Get(id);
-            return user;
+            var project = _projectRepository.Get(id);
+            try
+            {
+                if (project.Image != null)
+                {
+                    var imageBase64 = project.Image != null ? Convert.ToBase64String(project.Image) : null;
+                    project.ImageBase64 = imageBase64;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return project;
         }
         [Route("GetAll/Categories")]
         [HttpGet]
@@ -48,16 +61,26 @@ namespace KursovaBack.Controllers
         public async Task<List<Project>> GetAllByCategory(string category)
             {
             var projects = await _projectRepository.GetAllByCategory(category);
-            return projects;
+
+            return convert( projects);
         }
 
         [Route("Create")]
         [HttpPost]
-        public IActionResult CreateProject([FromBody] ProjectCreateViewModel model) 
+        public async Task<IActionResult> CreateProject([FromForm] ProjectCreateViewModel model) 
         {
-          
-          _projectService.CreateProject(model, model.CreatorId);
-           
+            byte[] imageData = null;
+            if (model.fromFile != null)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await model.fromFile.CopyToAsync(ms);
+                    imageData = ms.ToArray();
+                }
+            }
+            model.Image = imageData;
+            _projectService.CreateProject(model, model.CreatorId);
+            
             return Ok();
         }
         [Route("Add/Student")]
@@ -65,11 +88,7 @@ namespace KursovaBack.Controllers
         public IActionResult AddProjectStudent([FromBody] AddProjectUser model)
         {
             model.role = Models.Enums.ProjectRole.Basic;
-
-
             _projectRepository.AddUserToProject(model);
-           
-
             return Ok();
         }
         [Route("Add/Mentor")]
@@ -93,17 +112,52 @@ namespace KursovaBack.Controllers
         public List<Project> GetUserProjects (Guid userId)
         {
             var projects= _projectRepository.GetUserProjects(userId);
-            return projects;
+
+            return convert (projects);
         }
         [HttpGet]
         [Route("GetAll/Members/{projectId}")]
         public async Task<IActionResult> GetAllUsersByProject(Guid projectId)
         {
             var projects = await _projectRepository.GetAllByProject(projectId);
+            foreach (var user in projects)
+            {
+                try
+                {
+                    if (user.Avatar != null)
+                    {
+                        var imageBase64 = user.Avatar != null ? Convert.ToBase64String(user.Avatar) : null;
+                        user.ImageBase64 = imageBase64;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
             return Ok(projects);
+
         }
 
+        public static List<Project> convert(List<Project> projects)
+        {
+            foreach (var project in projects)
+            {
+                try
+                {
+                    if (project.Image != null)
+                    {
+                        var imageBase64 = project.Image != null ? Convert.ToBase64String(project.Image) : null;
+                        project.ImageBase64 = imageBase64;
+                    }
+                }
+                catch (Exception ex)
+                {
 
+                }
+            }
+            return projects;
+        }
 
     }
 }

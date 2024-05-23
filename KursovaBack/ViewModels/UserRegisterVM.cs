@@ -14,7 +14,6 @@ namespace KursovaBack.ViewModels
         [PasswordPropertyText]
         public string Password { get; set; }
 
-   
 
         public string? FirstName { get; set; }
 

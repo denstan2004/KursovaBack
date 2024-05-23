@@ -15,11 +15,9 @@ namespace KursovaBack.Models
         public string education { get; set; }
         public string expirience { get; set; }
         public string investment_info { get; set; }
-        [JsonIgnore]
-        public List<UserConnectionId>? Connections { get; set; }
-
-        [JsonIgnore]
-        public List<Message>? Messages { get; set; }
+        public IFormFile fromFile { get; set; }
+        public string ImageBase64 { get; set; }
+        public byte[] Avatar { get; set; }
 
 
     }

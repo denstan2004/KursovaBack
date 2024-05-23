@@ -1,10 +1,10 @@
 using KursovaBack;
-using KursovaBack.AppDbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using KursovaBack.AppDbContext;
+using project_back.context;
+using project_back.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -55,7 +56,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
+app.MapHub<ChatHub>("/chat");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
